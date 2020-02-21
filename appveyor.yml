@@ -9,6 +9,7 @@ install:
   # install yarn
   - npm install yarn -g
   - yarn
+  - yarn build
   - cd demos
   - yarn
   - cd ..
