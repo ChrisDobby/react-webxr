@@ -11,6 +11,7 @@ install:
   - yarn
   - cd demos
   - yarn
+  - cd ..
 
 # Post-install test scripts.
 test_script:
