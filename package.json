@@ -12,6 +12,7 @@
     "prettier": "npm run prettier \"package/**/*.+(ts|tsx)\"",
     "format": "npm run prettier -- --write",
     "check-types": "tsc --noEmit",
+    "check-types-all": "tsc --noEmit && cd demos && tsc --noEmit",
     "start-demos": "cd demos && yarn start",
     "develop": "yarn refresh && yarn link && cd demos && yarn && yarn link react-webxr && cd .. && npm-run-all --parallel start-demos refresh:watch"
   },

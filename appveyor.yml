@@ -1,0 +1,28 @@
+# Test against the latest version of this Node.js version
+environment:
+  nodejs_version: "10"
+
+# Install scripts. (runs after repo cloning)
+install:
+  # Get the latest stable version of Node.js or io.js
+  - ps: Install-Product node $env:nodejs_version
+  # install yarn
+  - npm install yarn -g
+  - yarn
+  - cd demos
+  - yarn
+
+# Post-install test scripts.
+test_script:
+  # Output useful info for debugging.
+  - node --version
+  - npm --version
+  # run linting
+  - yarn lint
+  # check types
+  - yarn check-types-all
+  # run tests
+  - npm test
+
+# Don't actually build.
+build: off
