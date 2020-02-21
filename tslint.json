@@ -1,0 +1,36 @@
+{
+    "extends": [
+        "tslint-config-airbnb",
+        "tslint-config-prettier",
+        "tslint-plugin-prettier",
+        "tslint-react",
+        "tslint-react-a11y"
+    ],
+    "rules": {
+        "prettier": true,
+        "no-console": false,
+        "semicolon": [
+            true,
+            "always",
+            "ignore-bound-class-methods"
+        ],
+        "ordered-imports": false,
+        "jsx-no-lambda": false,
+        "jsx-no-multiline-js": false,
+        "jsx-boolean-value": false,
+        "react-anchor-blank-noopener": true,
+        // This rule is here for now because of https://github.com/palantir/tslint-react/issues/120
+        "variable-name": [
+            true,
+            "ban-keywords",
+            "check-format",
+            "allow-pascal-case"
+        ],
+        "import-name": false
+    },
+    "linterOptions": {
+        "exclude": [
+            "node_modules/**/*.ts"
+        ]
+    }
+}
