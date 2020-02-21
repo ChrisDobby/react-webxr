@@ -1,2 +1,4 @@
 # react-webxr
-React implementation of some of the webxr api
+
+## Status
+[![Build status](https://ci.appveyor.com/api/projects/status/9uxqva5vglckj6r4?svg=true)](https://ci.appveyor.com/project/ChrisDobby/react-webxr)
