@@ -1,13 +1,8 @@
 import React from "react";
-import { Test } from "react-webxr";
 import "./App.css";
 
 const App = () => {
-    return (
-        <div className="App">
-            <Test />
-        </div>
-    );
+    return <div className="App" />;
 };
 
 export default App;
