@@ -16,4 +16,4 @@ react-webxr is an attempt at creating [React](https://reactjs.org/) components i
 ## Getting Started
 
 Once you have cloned the repository run `yarn` to install the package dependencies.
-Then run `yarn develop` to build the package, link it to the demos application and run the demos application on `http://localhost:3000` - hot reloading is enabled so any changes made to the package will be immediately reflected in the application.
+Then run `yarn storybook` to run the storybook application on http://localhost:3000
