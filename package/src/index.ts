@@ -1,3 +1,4 @@
-import Test from "./test";
+import useAugmentedReality from "./useAugmentedReality";
+import AugmentedRealityView from "./components/AugmentedRealityView";
 
-export { Test };
+export { useAugmentedReality, AugmentedRealityView };
