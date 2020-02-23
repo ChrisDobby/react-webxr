@@ -18,5 +18,5 @@
     "sourceMap": true,
     "typeRoots": ["index.d.ts", "node_modules/@types"]
   },
-  "include": ["package/src"]
+  "include": ["src"]
 }

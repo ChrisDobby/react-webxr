@@ -9,7 +9,7 @@
     "refresh": "tsc",
     "refresh:watch": "tsc --watch",
     "lint": "tslint -c tslint.json --project tsconfig.json",
-    "prettier": "npm run prettier \"package/**/*.+(ts|tsx)\"",
+    "prettier": "npm run prettier \"src/**/*.+(ts|tsx)\"",
     "format": "npm run prettier -- --write",
     "check-types": "tsc --noEmit",
     "check-types-all": "tsc --noEmit && cd demos && tsc --noEmit",
