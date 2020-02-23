@@ -19,7 +19,13 @@ type StandardProps = React.AriaAttributes & {
 };
 
 type AugmentedRealityViewProps = StandardProps & {
+    /**
+     * Component to use to start/stop the session rather than the default button
+     */
     startStopComponent?: (props: StartComponentProps) => JSX.Element;
+    /**
+     * Component to use to display messages when augmented reality is not supported rather than the default message
+     */
     unsupportedComponent?: (props: UnsupportedReasonProps) => JSX.Element;
 };
 
@@ -51,6 +57,9 @@ const UnsupportedMessage = (props: UnsupportedMessageProps) => {
     return <div {...otherProps}>{getMessage()}</div>;
 };
 
+/**
+ * `AugmentedRealityView` will offer the user the opportunity to start a fully immersive augmented reality session when available in the browser
+ */
 const AugmentedRealityView = (props: AugmentedRealityViewProps) => {
     const { startStopComponent, unsupportedComponent, ...otherProps } = props;
     const {
