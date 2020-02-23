@@ -10,9 +10,6 @@ install:
   - npm install yarn -g
   - yarn
   - yarn build
-  - cd demos
-  - yarn
-  - cd ..
 
 # Post-install test scripts.
 test_script:
@@ -22,7 +19,7 @@ test_script:
   # run linting
   - yarn lint
   # check types
-  - yarn check-types-all
+  - yarn check-types
   # run tests
   - npm test
 
