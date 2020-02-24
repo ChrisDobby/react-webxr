@@ -1,1 +1,4 @@
 .storybook
+.storybook-out
+.vscode
+coverage
