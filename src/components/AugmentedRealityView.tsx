@@ -12,7 +12,7 @@ type UnsupportedReasonProps = {
     reason: UnsupportedReason;
 };
 
-type StandardProps = React.AriaAttributes & {
+type StandardProps = {
     id?: string;
     className?: string;
     style?: React.CSSProperties;
