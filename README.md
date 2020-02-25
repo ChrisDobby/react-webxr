@@ -16,6 +16,7 @@ A list of components and usage can be found in the [![storybook](https://cdn.jsd
 ## Browser Support
 
 Currently the augmented reality features in WebXR are only supported in the Chrome 81 for Android - currently in [beta](https://www.google.com/chrome/beta/)
+
 [caniuse WebXR](https://caniuse.com/#feat=webxr)
 
 ## Prerequisites
