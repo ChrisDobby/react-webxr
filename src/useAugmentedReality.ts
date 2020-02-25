@@ -1,8 +1,14 @@
 import * as React from "react";
 import { Renderer, createWebGLContext } from "./immersive-web/render/core/renderer";
 import { Scene } from "./immersive-web/render/scenes/scene";
+import { Gltf2Node } from "./immersive-web/render/nodes/gltf2";
 
 const sessionType = "immersive-ar";
+
+export type GltfImage = {
+    src: string;
+    scale?: [number, number, number];
+};
 
 export enum UnsupportedReason {
     NotInitialised,
@@ -75,6 +81,15 @@ const useAugmentedReality = () => {
         currentSession.current.requestAnimationFrame(onXRFrame);
     };
 
+    const onXRFrame = (_: any, frame: Frame) => {
+        if (!xrRefSpace.current) return;
+        const pose = frame.getViewerPose(xrRefSpace.current);
+        scene.current.startFrame();
+        currentSession.current?.requestAnimationFrame(onXRFrame);
+        scene.current.drawXRFrame(frame, pose);
+        scene.current.endFrame();
+    };
+
     const startSession = () => {
         if (!support.isSupported) return;
         navigator.xr?.requestSession(sessionType).then(onSessionStart);
@@ -86,16 +101,29 @@ const useAugmentedReality = () => {
         }
     };
 
-    const onXRFrame = (_: any, frame: Frame) => {
-        if (!xrRefSpace.current) return;
-        const pose = frame.getViewerPose(xrRefSpace.current);
-        scene.current.startFrame();
-        currentSession.current?.requestAnimationFrame(onXRFrame);
-        scene.current.drawXRFrame(frame, pose);
-        scene.current.endFrame();
+    const viewStats = (view: boolean) => {
+        if (scene.current) {
+            scene.current.enableStats(view);
+        }
     };
 
-    return { support, startSession, endSession };
+    const showImages = (images: GltfImage[]) => {
+        if (!scene.current) {
+            return;
+        }
+
+        scene.current.clear = true;
+        for (const image of images) {
+            const { src, scale } = image;
+            const newImage = new Gltf2Node({ url: src });
+            if (scale) {
+                newImage.scale = scale;
+            }
+            scene.current.addNode(newImage);
+        }
+    };
+
+    return { support, startSession, endSession, viewStats, showImages };
 };
 
 export default useAugmentedReality;

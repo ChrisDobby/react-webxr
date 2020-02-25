@@ -1,6 +1,5 @@
 import * as React from "react";
-import { useAugmentedReality } from "..";
-import { UnsupportedReason } from "../useAugmentedReality";
+import useAugmentedReality, { UnsupportedReason, GltfImage } from "../useAugmentedReality";
 
 type StartComponentProps = {
     sessionInProgress: boolean;
@@ -23,10 +22,22 @@ type AugmentedRealityViewProps = StandardProps & {
      * Component to use to start/stop the session rather than the default button
      */
     startStopComponent?: (props: StartComponentProps) => JSX.Element;
+
     /**
      * Component to use to display messages when augmented reality is not supported rather than the default message
      */
     unsupportedComponent?: (props: UnsupportedReasonProps) => JSX.Element;
+
+    /**
+     * Indicates whether to show the stats box
+     * @default true
+     */
+    showStats?: boolean;
+
+    /**
+     * Array of images in gltf format to be displayed in the view
+     */
+    images?: GltfImage[];
 };
 
 type UnsupportedMessageProps = StandardProps & UnsupportedReasonProps;
@@ -61,12 +72,24 @@ const UnsupportedMessage = (props: UnsupportedMessageProps) => {
  * `AugmentedRealityView` will offer the user the opportunity to start a fully immersive augmented reality session when available in the browser
  */
 const AugmentedRealityView = (props: AugmentedRealityViewProps) => {
-    const { startStopComponent, unsupportedComponent, ...otherProps } = props;
+    const { startStopComponent, unsupportedComponent, images, showStats = true, ...otherProps } = props;
     const {
         support: { isSupported, unsupportedReason },
         startSession,
         endSession,
+        viewStats,
+        showImages,
     } = useAugmentedReality();
+
+    React.useEffect(() => {
+        viewStats(showStats);
+    }, [showStats]);
+
+    React.useEffect(() => {
+        if (images) {
+            showImages(images);
+        }
+    }, [images]);
 
     if (!isSupported) {
         const Unsupported = unsupportedComponent || UnsupportedMessage;

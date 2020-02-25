@@ -12,6 +12,19 @@ export default {
 
 export const Default = () => <AugmentedRealityView />;
 
+export const NoStats = () => <AugmentedRealityView showStats={false} />;
+
+export const WithScaledImage = () => {
+    const scale: [number, number, number] = [0.1, 0.1, 0.1];
+    const images = [
+        {
+            scale,
+            src: "https://raw.githubusercontent.com/immersive-web/webxr-samples/master/media/gltf/space/space.gltf",
+        },
+    ];
+    return <AugmentedRealityView images={images} showStats={false} />;
+};
+
 const StoryStartStopButton = (props: any) => <button onClick={props.onStartSelected}>Start AR session</button>;
 export const WithStartStopComponent = () => <AugmentedRealityView startStopComponent={StoryStartStopButton} />;
 
