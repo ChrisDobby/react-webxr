@@ -39,8 +39,7 @@ const useAugmentedReality = () => {
             unsupportedReason: isSupportedInBrowser ? undefined : UnsupportedReason.NotSupportedInBrowser,
         });
     };
-
-    React.useEffect(() => {
+    const onDeviceChange = () => {
         if (!window.isSecureContext) {
             setSupport({ isSupported: false, unsupportedReason: UnsupportedReason.InsecureConnection });
         } else if (!navigator.xr) {
@@ -48,6 +47,10 @@ const useAugmentedReality = () => {
         } else {
             checkBrowserSupport(navigator.xr);
         }
+    };
+
+    React.useEffect(() => {
+        onDeviceChange();
     }, []);
 
     const onResize = () => {
@@ -61,6 +64,7 @@ const useAugmentedReality = () => {
         glContext.current = createWebGLContext({ xrCompatible: true });
         document.body.appendChild(glContext.current.canvas);
         window.addEventListener("resize", onResize);
+        window.addEventListener("devicechange", onDeviceChange);
         onResize();
         renderer.current = new Renderer(glContext.current);
         scene.current.setRenderer(renderer.current);
