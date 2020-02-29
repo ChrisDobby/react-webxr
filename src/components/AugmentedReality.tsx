@@ -1,6 +1,15 @@
 import * as React from "react";
 import { UnsupportedReason } from "../useAugmentedReality";
-import { StartComponentProps, StandardProps, StandardAugmentedRealityProps, UnsupportedReasonProps } from "./types";
+import {
+    StartComponentProps,
+    StandardProps,
+    StandardAugmentedRealityProps,
+    UnsupportedReasonProps,
+    GltfImage,
+} from "./types";
+import { Gltf2Node } from "../immersive-web/render/nodes/gltf2";
+import { useAugmentedReality } from "..";
+import { startSession, endSession, enableStats, addImage, removeImage } from "../augmentedRealitySession";
 
 type UnsupportedMessageProps = StandardProps & UnsupportedReasonProps;
 
@@ -30,41 +39,62 @@ const StartStopButton = ({ onStartSelected }: StartComponentProps) => (
     </button>
 );
 
-type AugmentedRealityProps = StandardProps &
-    StandardAugmentedRealityProps & {
-        isSupported: boolean;
-        unsupportedReason?: UnsupportedReason;
-        startSession: () => void;
-        endSession: () => void;
-        viewStats: (show: boolean) => void;
-    };
+type AugmentedRealityProps = StandardProps & StandardAugmentedRealityProps;
+
+type SceneImage = {
+    key: string;
+    node: Gltf2Node;
+};
 
 const AugmentedReality = (props: AugmentedRealityProps) => {
-    const {
-        isSupported,
-        startStopComponent,
-        unsupportedComponent,
-        unsupportedReason,
-        startSession,
-        endSession,
-        viewStats,
-        showStats = true,
-        ...otherProps
-    } = props;
+    const [session, setSession] = React.useState<XRSession>();
+    const { support } = useAugmentedReality();
+    const { startStopComponent, unsupportedComponent, showStats = true, images, ...otherProps } = props;
+
+    const imagesInView = React.useRef<SceneImage[]>([]);
+
+    const updateImages = (images?: GltfImage[]) => {
+        const toRemove = imagesInView.current.filter(({ key }) => !Boolean(images?.find(image => image.key === key)));
+        const toAdd = images?.filter(({ key }) => !Boolean(imagesInView.current.find(image => image.key === key)));
+
+        for (const image of toRemove) {
+            removeImage(image.node);
+        }
+
+        for (const image of toAdd || []) {
+            const { src, scale, matrix } = image;
+            const newImage = new Gltf2Node({ url: src });
+            if (scale) {
+                newImage.scale = scale;
+            }
+            if (matrix) {
+                newImage.matrix = matrix;
+            }
+
+            addImage(newImage);
+            imagesInView.current.push({ key: image.key, node: newImage });
+        }
+    };
 
     React.useEffect(() => {
-        if (isSupported) {
-            viewStats(showStats);
+        if (session) {
+            enableStats(showStats);
         }
-    }, [showStats]);
+    }, [showStats, support, session]);
 
-    if (!isSupported) {
+    React.useEffect(() => {
+        if (session) {
+            updateImages(images);
+        }
+    }, [images, updateImages, session]);
+
+    if (!support.isSupported) {
         const Unsupported = unsupportedComponent || UnsupportedMessage;
-        return <Unsupported {...otherProps} reason={unsupportedReason as UnsupportedReason} />;
+        return <Unsupported {...otherProps} reason={support.unsupportedReason as UnsupportedReason} />;
     }
 
-    const onStartSelected = () => {
-        startSession();
+    const onStartSelected = async () => {
+        setSession(await startSession());
     };
 
     const onStopSelected = () => {

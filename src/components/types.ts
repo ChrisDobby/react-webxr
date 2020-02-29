@@ -1,5 +1,12 @@
 import { UnsupportedReason } from "../useAugmentedReality";
 
+export type GltfImage = {
+    key: string;
+    src: string;
+    scale?: [number, number, number];
+    matrix?: any;
+};
+
 export type UnsupportedReasonProps = {
     reason: UnsupportedReason;
 };
@@ -32,4 +39,9 @@ export type StandardAugmentedRealityProps = {
      * @default true
      */
     showStats?: boolean;
+
+    /**
+     * Array of images in gltf format to be displayed in the view
+     */
+    images?: GltfImage[];
 };
