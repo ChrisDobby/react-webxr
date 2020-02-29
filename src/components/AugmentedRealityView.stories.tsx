@@ -19,6 +19,7 @@ export const WithScaledImage = () => {
     const images = [
         {
             scale,
+            key: "1",
             src: "https://raw.githubusercontent.com/immersive-web/webxr-samples/master/media/gltf/space/space.gltf",
         },
     ];
