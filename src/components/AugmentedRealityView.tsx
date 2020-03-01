@@ -1,6 +1,6 @@
 import * as React from "react";
 import AugmentedReality from "./AugmentedReality";
-import { StandardProps, StandardAugmentedRealityProps } from "./types";
+import { StandardProps, StandardAugmentedRealityProps } from "./propTypes";
 
 export type AugmentedRealityViewProps = StandardProps & StandardAugmentedRealityProps;
 

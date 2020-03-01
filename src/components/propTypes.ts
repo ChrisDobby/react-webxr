@@ -1,11 +1,5 @@
 import { UnsupportedReason } from "../useAugmentedReality";
-
-export type GltfImage = {
-    key: string;
-    src: string;
-    scale?: [number, number, number];
-    matrix?: any;
-};
+import { GltfImage } from "../types";
 
 export type UnsupportedReasonProps = {
     reason: UnsupportedReason;

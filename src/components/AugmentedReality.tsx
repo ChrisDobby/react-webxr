@@ -1,12 +1,7 @@
 import * as React from "react";
 import { UnsupportedReason } from "../useAugmentedReality";
-import {
-    StartComponentProps,
-    StandardProps,
-    StandardAugmentedRealityProps,
-    UnsupportedReasonProps,
-    GltfImage,
-} from "./types";
+import { StartComponentProps, StandardProps, StandardAugmentedRealityProps, UnsupportedReasonProps } from "./propTypes";
+import { GltfImage, XRSessionOptions } from "../types";
 import { Gltf2Node } from "../immersive-web/render/nodes/gltf2";
 import { useAugmentedReality } from "..";
 import { startSession, endSession, enableStats, addImage, removeImage } from "../augmentedRealitySession";
@@ -39,7 +34,10 @@ const StartStopButton = ({ onStartSelected }: StartComponentProps) => (
     </button>
 );
 
-type AugmentedRealityProps = StandardProps & StandardAugmentedRealityProps;
+type AugmentedRealityProps = StandardProps &
+    StandardAugmentedRealityProps & {
+        options?: XRSessionOptions;
+    };
 
 type SceneImage = {
     key: string;
@@ -49,7 +47,7 @@ type SceneImage = {
 const AugmentedReality = (props: AugmentedRealityProps) => {
     const [session, setSession] = React.useState<XRSession>();
     const { support } = useAugmentedReality();
-    const { startStopComponent, unsupportedComponent, showStats = true, images, ...otherProps } = props;
+    const { startStopComponent, unsupportedComponent, showStats = true, images, options, ...otherProps } = props;
 
     const imagesInView = React.useRef<SceneImage[]>([]);
 
@@ -94,7 +92,7 @@ const AugmentedReality = (props: AugmentedRealityProps) => {
     }
 
     const onStartSelected = async () => {
-        setSession(await startSession());
+        setSession(await startSession(options));
     };
 
     const onStopSelected = () => {
