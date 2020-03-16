@@ -1,7 +1,6 @@
 import { Scene } from "./immersive-web/render/scenes/scene";
 import { Gltf2Node } from "./immersive-web/render/nodes/gltf2";
 import { Renderer, createWebGLContext } from "./immersive-web/render/core/renderer";
-import { HitTestOptions, XRSessionOptions } from "./types";
 
 const sessionType = "immersive-ar";
 
@@ -13,28 +12,19 @@ let xrHitTestTarget: Gltf2Node | null = null;
 let gl: any = null;
 let renderer = null;
 let xrSession: XRSession | null = null;
-let currentHitTestMatrix: Float32Array | null = null;
 
 const scene = new Scene();
 scene.enableStats(false);
 scene.clear = false;
 
-const onSessionSelect = (onSelect: (matrix: Float32Array) => void) => () => {
-    if (currentHitTestMatrix) {
-        onSelect(currentHitTestMatrix);
-    }
-};
-
-const handleHitTest = (onHitTest?: (matrix: Float32Array) => void) => {
+const handleHitTest = (onHitTest?: (matrix: Float32Array | null) => void) => {
     const handler = (frame: Frame, pose: any) => {
         if (xrHitTestTarget) xrHitTestTarget.visible = false;
         if (!xrHitTestSource || !pose) return;
-        currentHitTestMatrix = null;
 
         const hitTestResults = frame.getHitTestResults(xrHitTestSource);
         if (hitTestResults.length > 0) {
             const hitTestPose = hitTestResults[0].getPose(xrRefSpace as ReferenceSpace);
-            currentHitTestMatrix = hitTestPose.transform.matrix;
             if (xrHitTestTarget) {
                 xrHitTestTarget.visible = true;
                 xrHitTestTarget.matrix = hitTestPose.transform.matrix;
@@ -43,6 +33,8 @@ const handleHitTest = (onHitTest?: (matrix: Float32Array) => void) => {
             if (onHitTest) {
                 onHitTest(hitTestPose.transform.matrix);
             }
+        } else if (onHitTest) {
+            onHitTest(null);
         }
     };
 
@@ -81,9 +73,14 @@ const initGl = () => {
     scene.setRenderer(renderer);
 };
 
-const initHitTest = (hitTestOptions: HitTestOptions) => {
-    const { showTarget, targetImageUrl, onSelect } = hitTestOptions;
-    currentHitTestMatrix = null;
+type SessionHitTestOptions = {
+    showTarget: boolean;
+    targetImageUrl?: string;
+    onHitTest?: (matrix: Float32Array | null) => void;
+};
+
+const initHitTest = (hitTestOptions: SessionHitTestOptions) => {
+    const { showTarget, targetImageUrl } = hitTestOptions;
     if (showTarget) {
         xrHitTestTarget = new Gltf2Node({
             url:
@@ -94,10 +91,6 @@ const initHitTest = (hitTestOptions: HitTestOptions) => {
         scene.addNode(xrHitTestTarget);
     }
 
-    if (onSelect) {
-        xrSession?.addEventListener("select", onSessionSelect(onSelect));
-    }
-
     xrSession?.requestReferenceSpace("viewer").then(refSpace => {
         xrViewerSpace = refSpace;
         xrSession?.requestHitTestSource({ space: xrViewerSpace }).then(hitTestSource => {
@@ -106,7 +99,11 @@ const initHitTest = (hitTestOptions: HitTestOptions) => {
     });
 };
 
-const getHandlers = (options?: XRSessionOptions) => {
+type SessionOptions = {
+    hitTestOptions?: SessionHitTestOptions;
+};
+
+const getHandlers = (options?: SessionOptions) => {
     if (!options) return [];
     const handlers = [];
     if (options.hitTestOptions) {
@@ -120,10 +117,9 @@ const onSessionEnded = () => {
     xrHitTestSource?.cancel();
     xrHitTestSource = null;
     xrHitTestTarget = null;
-    currentHitTestMatrix = null;
 };
 
-const getRequiredFeatures = (options?: XRSessionOptions) => {
+const getRequiredFeatures = (options?: SessionOptions) => {
     if (!options) return [];
     if (options.hitTestOptions) {
         return ["local", "hit-test"];
@@ -132,7 +128,7 @@ const getRequiredFeatures = (options?: XRSessionOptions) => {
     return [];
 };
 
-export const startSession = async (options?: XRSessionOptions) => {
+export const startSession = async (options?: SessionOptions) => {
     if (!navigator.xr) return;
     const requiredFeatures = getRequiredFeatures(options);
     const requestOptions = requiredFeatures.length > 0 ? { requiredFeatures } : undefined;

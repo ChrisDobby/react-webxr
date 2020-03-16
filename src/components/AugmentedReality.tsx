@@ -37,6 +37,8 @@ const StartStopButton = ({ onStartSelected }: StartComponentProps) => (
 type AugmentedRealityProps = StandardProps &
     StandardAugmentedRealityProps & {
         options?: XRSessionOptions;
+        onSelect?: () => void;
+        onHitTest?: (matrix: Float32Array | null) => void;
     };
 
 type SceneImage = {
@@ -47,7 +49,16 @@ type SceneImage = {
 const AugmentedReality = (props: AugmentedRealityProps) => {
     const [session, setSession] = React.useState<XRSession>();
     const { support } = useAugmentedReality();
-    const { startStopComponent, unsupportedComponent, showStats = true, images, options, ...otherProps } = props;
+    const {
+        startStopComponent,
+        unsupportedComponent,
+        showStats = true,
+        images,
+        onHitTest,
+        onSelect,
+        options,
+        ...otherProps
+    } = props;
 
     const imagesInView = React.useRef<SceneImage[]>([]);
 
@@ -86,13 +97,26 @@ const AugmentedReality = (props: AugmentedRealityProps) => {
         }
     }, [images, updateImages, session]);
 
+    React.useEffect(() => {
+        if (onSelect) {
+            session?.addEventListener("select", onSelect);
+        }
+        return () => session?.removeEventListener("select", onSelect);
+    });
+
     if (!support.isSupported) {
         const Unsupported = unsupportedComponent || UnsupportedMessage;
         return <Unsupported {...otherProps} reason={support.unsupportedReason as UnsupportedReason} />;
     }
 
     const onStartSelected = async () => {
-        setSession(await startSession(options));
+        const allOptions = onHitTest
+            ? {
+                  ...options,
+                  hitTestOptions: options?.hitTestOptions ? { ...options?.hitTestOptions, onHitTest } : undefined,
+              }
+            : options;
+        setSession(await startSession({ ...allOptions }));
     };
 
     const onStopSelected = () => {

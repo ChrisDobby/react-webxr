@@ -5,7 +5,7 @@ declare class XRWebGLLayer {
 type UpdateRenderStateOptions = { baseLayer?: XRWebGLLayer };
 
 interface Pose {
-    transform: { matrix: any };
+    transform: { matrix: Float32Array };
 }
 interface ReferenceSpace {}
 interface HitTestSource {
@@ -25,6 +25,7 @@ interface Frame {
 interface XRSession {
     end: () => void;
     addEventListener: (event: string, callback) => void;
+    removeEventListener: (event: string, callback) => void;
     requestReferenceSpace: (space: string) => Promise<ReferenceSpace>;
     requestHitTestSource: ({ space: ReferenceSpace }) => Promise<HitTestSource>;
     requestAnimationFrame: (onFrame: (t: any, frame: Frame) => void) => void;

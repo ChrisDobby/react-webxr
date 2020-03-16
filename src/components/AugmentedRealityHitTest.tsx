@@ -16,24 +16,36 @@ type AugmentedRealityHitTestProps = StandardProps &
         targetImage?: GltfImage;
 
         /**
-         * Event called when a hit test target is found
-         */
-        onHitTest?: (matrix: any) => void;
-
-        /**
          * Event called when a hit test target has been selected by the user
          */
-        onSelect?: (matrix: any) => void;
+        onHitTestSelect?: (matrix: Float32Array) => void;
     };
 
 /**
  * `AugmentedRealityHitTest`
  */
 const AugmentedRealityHitTest = (props: AugmentedRealityHitTestProps) => {
-    const { showStats = false, showTarget = true, targetImage, onHitTest, onSelect, ...standardProps } = props;
-    const hitTestOptions = { targetImage, onHitTest, onSelect, showTarget: Boolean(showTarget) };
+    const currentMatrix = React.useRef<Float32Array | null>(null);
+    const onHitTest = (matrix: Float32Array | null) => (currentMatrix.current = matrix);
 
-    return <AugmentedReality showStats={showStats} {...standardProps} options={{ hitTestOptions }} />;
+    const { showStats = false, showTarget = true, targetImage, onHitTestSelect, ...standardProps } = props;
+    const hitTestOptions = { targetImage, showTarget: Boolean(showTarget) };
+
+    const onSelect = () => {
+        if (currentMatrix.current && onHitTestSelect) {
+            onHitTestSelect(currentMatrix.current);
+        }
+    };
+
+    return (
+        <AugmentedReality
+            showStats={showStats}
+            {...standardProps}
+            options={{ hitTestOptions }}
+            onHitTest={onHitTest}
+            onSelect={onHitTestSelect ? onSelect : undefined}
+        />
+    );
 };
 
 export default AugmentedRealityHitTest;
