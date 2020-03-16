@@ -164,8 +164,6 @@ export const enableStats = (enabled: boolean) => {
 
 export const addImage = (imageNode: Gltf2Node, includeShadow?: boolean) => {
     if (!xrSession) return;
-    console.log("adding image");
-    console.log(includeShadow);
     if (includeShadow) {
         const shadow = new DropShadowNode();
         vec3.set(shadow.scale, 0.15, 0.15, 0.15);
