@@ -1,6 +1,9 @@
 import { Scene } from "./immersive-web/render/scenes/scene";
 import { Gltf2Node } from "./immersive-web/render/nodes/gltf2";
 import { Renderer, createWebGLContext } from "./immersive-web/render/core/renderer";
+import { DropShadowNode } from "./immersive-web/render/nodes/drop-shadow";
+import { vec3 } from "./immersive-web/render/math/gl-matrix";
+import { Node } from "./immersive-web/render/core/node";
 
 const sessionType = "immersive-ar";
 
@@ -159,12 +162,25 @@ export const enableStats = (enabled: boolean) => {
     scene.enableStats(enabled);
 };
 
-export const addImage = (imageNode: Gltf2Node) => {
+export const addImage = (imageNode: Gltf2Node, includeShadow?: boolean) => {
     if (!xrSession) return;
+    console.log("adding image");
+    console.log(includeShadow);
+    if (includeShadow) {
+        const shadow = new DropShadowNode();
+        vec3.set(shadow.scale, 0.15, 0.15, 0.15);
+
+        const imageAndShadowNode = new Node();
+        imageAndShadowNode.addNode(shadow);
+        scene.addNode(imageAndShadowNode);
+        return imageAndShadowNode;
+    }
+
     scene.addNode(imageNode);
+    return imageNode;
 };
 
-export const removeImage = (imageNode: Gltf2Node) => {
+export const removeImage = (imageNode: Gltf2Node | Node) => {
     if (!xrSession) return;
     scene.removeNode(imageNode);
 };

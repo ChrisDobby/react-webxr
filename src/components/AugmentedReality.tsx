@@ -3,6 +3,7 @@ import { UnsupportedReason } from "../useAugmentedReality";
 import { StartComponentProps, StandardProps, StandardAugmentedRealityProps, UnsupportedReasonProps } from "./propTypes";
 import { GltfImage, XRSessionOptions } from "../types";
 import { Gltf2Node } from "../immersive-web/render/nodes/gltf2";
+import { Node } from "../immersive-web/render/core/node";
 import { useAugmentedReality } from "..";
 import { startSession, endSession, enableStats, addImage, removeImage } from "../augmentedRealitySession";
 
@@ -43,7 +44,7 @@ type AugmentedRealityProps = StandardProps &
 
 type SceneImage = {
     key: string;
-    node: Gltf2Node;
+    node: Node | Gltf2Node;
 };
 
 const AugmentedReality = (props: AugmentedRealityProps) => {
@@ -80,8 +81,10 @@ const AugmentedReality = (props: AugmentedRealityProps) => {
                 newImage.matrix = matrix;
             }
 
-            addImage(newImage);
-            imagesInView.current.push({ key: image.key, node: newImage });
+            const node = addImage(newImage, image.includeShadow);
+            if (!node) return;
+
+            imagesInView.current.push({ node, key: image.key });
         }
     };
 
