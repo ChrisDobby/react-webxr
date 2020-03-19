@@ -1,7 +1,6 @@
 export type GltfImage = {
     key: string;
     src: string;
-    scale?: [number, number, number];
     matrix?: Float32Array;
     includeShadow?: boolean;
 };
