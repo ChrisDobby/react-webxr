@@ -74,15 +74,14 @@ const AugmentedReality = (props: AugmentedRealityProps) => {
         for (const image of toAdd || []) {
             const { src, scale, matrix } = image;
             const newImage = new Gltf2Node({ url: src });
-            if (scale) {
-                newImage.scale = scale;
-            }
-            if (matrix) {
-                newImage.matrix = matrix;
-            }
-
             const node = addImage(newImage, image.includeShadow);
             if (!node) return;
+            if (scale) {
+                node.scale = scale;
+            }
+            if (matrix) {
+                node.matrix = matrix;
+            }
 
             imagesInView.current.push({ node, key: image.key });
         }

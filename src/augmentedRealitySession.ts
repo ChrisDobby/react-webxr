@@ -169,6 +169,7 @@ export const addImage = (imageNode: Gltf2Node, includeShadow?: boolean) => {
         vec3.set(shadow.scale, 0.15, 0.15, 0.15);
 
         const imageAndShadowNode = new Node();
+        imageAndShadowNode.addNode(imageNode);
         imageAndShadowNode.addNode(shadow);
         scene.addNode(imageAndShadowNode);
         return imageAndShadowNode;
