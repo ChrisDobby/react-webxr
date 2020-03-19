@@ -12,7 +12,7 @@
     "prettier": "npm run prettier \"src/**/*.+(ts|tsx)\"",
     "format": "npm run prettier -- --write",
     "check-types": "tsc --noEmit",
-    "storybook": "start-storybook --port 3000",
+    "storybook": "start-storybook -s gltf --port 3000",
     "build-storybook": "build-storybook -c .storybook -o .storybook-out"
   },
   "repository": {
