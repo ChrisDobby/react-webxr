@@ -11,9 +11,9 @@ type AugmentedRealityHitTestProps = StandardProps &
         showTarget?: boolean;
 
         /**
-         * Image in gltf format to use instead of the default image to show the current hit test target
+         * Url of a gltf image to use instead of the default image to show the current hit test target
          */
-        targetImage?: GltfImage;
+        targetImageUrl?: string;
 
         /**
          * Event called when a hit test target has been selected by the user
@@ -22,14 +22,14 @@ type AugmentedRealityHitTestProps = StandardProps &
     };
 
 /**
- * `AugmentedRealityHitTest`
+ * `AugmentedRealityHitTest` showa a target when the hit test finds a surface and reacts to onHitTestSelect event when user selects
  */
 const AugmentedRealityHitTest = (props: AugmentedRealityHitTestProps) => {
     const currentMatrix = React.useRef<Float32Array | null>(null);
     const onHitTest = (matrix: Float32Array | null) => (currentMatrix.current = matrix);
 
-    const { showStats = false, showTarget = true, targetImage, onHitTestSelect, ...standardProps } = props;
-    const hitTestOptions = { targetImage, showTarget: Boolean(showTarget) };
+    const { showStats = false, showTarget = true, targetImageUrl, onHitTestSelect, ...standardProps } = props;
+    const hitTestOptions = { targetImageUrl, showTarget: Boolean(showTarget) };
 
     const onSelect = () => {
         if (currentMatrix.current && onHitTestSelect) {

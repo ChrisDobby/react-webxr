@@ -63,4 +63,6 @@ export const WithInvisibleTarget = () => (
     <AugmentedRealityHitTest showTarget={false} onHitTestSelect={action("selected")} />
 );
 
-export const WithCustomTargetImage = () => <AugmentedRealityHitTest showTarget onHitTestSelect={action("selected")} />;
+export const WithCustomTargetImage = () => (
+    <AugmentedRealityHitTest showTarget targetImageUrl="triangle/Triangle.gltf" onHitTestSelect={action("selected")} />
+);
