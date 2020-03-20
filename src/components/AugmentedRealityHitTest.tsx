@@ -1,7 +1,6 @@
 import * as React from "react";
 import AugmentedReality from "./AugmentedReality";
 import { StandardProps, StandardAugmentedRealityProps } from "./propTypes";
-import { GltfImage } from "../types";
 
 type AugmentedRealityHitTestProps = StandardProps &
     StandardAugmentedRealityProps & {
