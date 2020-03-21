@@ -9,6 +9,17 @@
 
 React WebXR is an attempt at creating [React](https://reactjs.org/) components implementing some of the [WebXR Device API](https://www.w3.org/TR/webxr/). The intention is to start with some of the augmented reality features - firstly the Hit Test API.
 
+## Demo
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=a6474OdtKQU" target="_blank">
+    <img
+        src="http://img.youtube.com/vi/a6474OdtKQU/0.jpg"
+        alt="React WebXR Demo"
+        width="240"
+        height="180"
+        border="10"
+    />
+</a>
+
 ## Components
 
 A list of components and usage can be found in the [![storybook](https://cdn.jsdelivr.net/gh/storybooks/brand@master/badge/badge-storybook.svg)](https://react-webxr.chrisdobby.dev/)
