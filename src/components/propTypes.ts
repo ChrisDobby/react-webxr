@@ -38,4 +38,9 @@ export type StandardAugmentedRealityProps = {
      * Array of images in gltf format to be displayed in the view
      */
     images?: GltfImage[];
+
+    /**
+     * Content to overlay in the augmented reality view
+     */
+    children?: React.ReactNode;
 };

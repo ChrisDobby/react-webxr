@@ -30,11 +30,19 @@ interface XRSession {
     requestHitTestSource: ({ space: ReferenceSpace }) => Promise<HitTestSource>;
     requestAnimationFrame: (onFrame: (t: any, frame: Frame) => void) => void;
     updateRenderState: (options: UpdateRenderStateOptions) => void;
+    domOverlayState: { type: "screen" | "floating" | "head-locked" };
 }
 
 interface XR {
     isSessionSupported: (sessionType: string) => Promise<boolean>;
-    requestSession: (sessionType: string, options?: { requiredFeatures: string[] }) => Promise<XRSession>;
+    requestSession: (
+        sessionType: string,
+        options?: {
+            requiredFeatures: string[];
+            optionalFeatures?: string[];
+            domOverlay?: { root: HTMLElement | null };
+        },
+    ) => Promise<XRSession>;
 }
 
 interface NavigatorXR {

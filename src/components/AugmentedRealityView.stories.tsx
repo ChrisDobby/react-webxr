@@ -20,6 +20,12 @@ export const Default = () => {
     return <AugmentedRealityView images={images} showStats={false} />;
 };
 
+export const WithDomOverlay = () => (
+    <AugmentedRealityView showStats={false}>
+        <div>This shows on top of the AR view</div>
+    </AugmentedRealityView>
+);
+
 export const NoStats = () => <AugmentedRealityView showStats={false} />;
 
 const StoryStartStopButton = (props: any) => <button onClick={props.onStartSelected}>Start AR session</button>;

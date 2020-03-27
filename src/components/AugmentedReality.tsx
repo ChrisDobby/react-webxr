@@ -7,6 +7,7 @@ import { Node } from "../immersive-web/render/core/node";
 import { useAugmentedReality } from "..";
 import { startSession, endSession, enableStats, addImage, removeImage } from "../augmentedRealitySession";
 
+const overlayElementId = "react-webxr-dom-overlay";
 type UnsupportedMessageProps = StandardProps & UnsupportedReasonProps;
 
 const UnsupportedMessage = (props: UnsupportedMessageProps) => {
@@ -58,6 +59,7 @@ const AugmentedReality = (props: AugmentedRealityProps) => {
         onHitTest,
         onSelect,
         options,
+        children,
         ...otherProps
     } = props;
 
@@ -108,13 +110,18 @@ const AugmentedReality = (props: AugmentedRealityProps) => {
         return <Unsupported {...otherProps} reason={support.unsupportedReason as UnsupportedReason} />;
     }
 
+    const addDomOverlayOptions = (options?: XRSessionOptions) => {
+        if (!children) return options;
+        return { ...options, domOverlayOptions: { rootElementId: overlayElementId } };
+    };
+
+    const addHitTestOptions = (options?: XRSessionOptions) => {
+        if (!onHitTest) return options;
+        return { hitTestOptions: options?.hitTestOptions ? { ...options?.hitTestOptions, onHitTest } : undefined };
+    };
+
     const onStartSelected = async () => {
-        const allOptions = onHitTest
-            ? {
-                  ...options,
-                  hitTestOptions: options?.hitTestOptions ? { ...options?.hitTestOptions, onHitTest } : undefined,
-              }
-            : options;
+        const allOptions = addDomOverlayOptions(addHitTestOptions(options));
         setSession(await startSession({ ...allOptions }));
     };
 
@@ -126,6 +133,11 @@ const AugmentedReality = (props: AugmentedRealityProps) => {
     return (
         <div {...otherProps}>
             <StartStop onStartSelected={onStartSelected} onStopSelected={onStopSelected} sessionInProgress={false} />
+            {children && (
+                <div style={{ display: "none" }}>
+                    <div id={overlayElementId}>{children}</div>
+                </div>
+            )}
         </div>
     );
 };

@@ -82,6 +82,10 @@ type SessionHitTestOptions = {
     onHitTest?: (matrix: Float32Array | null) => void;
 };
 
+type SessionDomOverlayOptions = {
+    rootElementId: string;
+};
+
 const initHitTest = (hitTestOptions: SessionHitTestOptions) => {
     const { showTarget, targetImageUrl } = hitTestOptions;
     if (showTarget) {
@@ -104,6 +108,7 @@ const initHitTest = (hitTestOptions: SessionHitTestOptions) => {
 
 type SessionOptions = {
     hitTestOptions?: SessionHitTestOptions;
+    domOverlayOptions?: SessionDomOverlayOptions;
 };
 
 const getHandlers = (options?: SessionOptions) => {
@@ -124,17 +129,39 @@ const onSessionEnded = () => {
 
 const getRequiredFeatures = (options?: SessionOptions) => {
     if (!options) return [];
+    const features = [];
     if (options.hitTestOptions) {
-        return ["local", "hit-test"];
+        features.push("local", "hit-test");
     }
 
-    return [];
+    return features;
+};
+
+const getOptionalFeatures = (options?: SessionOptions) => {
+    if (!options) return [];
+    const features = [];
+    if (options.domOverlayOptions) {
+        features.push("dom-overlay");
+    }
+
+    return features;
+};
+
+const getInitOptions = (options?: SessionOptions) => {
+    if (options && options.domOverlayOptions) {
+        return { root: document.getElementById(options.domOverlayOptions.rootElementId) };
+    }
+
+    return {};
 };
 
 export const startSession = async (options?: SessionOptions) => {
     if (!navigator.xr) return;
-    const requiredFeatures = getRequiredFeatures(options);
-    const requestOptions = requiredFeatures.length > 0 ? { requiredFeatures } : undefined;
+    const requestOptions = {
+        requiredFeatures: getRequiredFeatures(options),
+        optionalFeatures: getOptionalFeatures(options),
+        ...getInitOptions(options),
+    };
 
     scene.clearNodes();
 

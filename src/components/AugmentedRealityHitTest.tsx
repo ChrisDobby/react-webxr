@@ -28,7 +28,7 @@ const AugmentedRealityHitTest = (props: AugmentedRealityHitTestProps) => {
     const onHitTest = (matrix: Float32Array | null) => (currentMatrix.current = matrix);
 
     const { showStats = false, showTarget = true, targetImageUrl, onHitTestSelect, ...standardProps } = props;
-    const hitTestOptions = { targetImageUrl, showTarget: Boolean(showTarget) };
+    const hitTestOptions = { targetImageUrl, showTarget };
 
     const onSelect = () => {
         if (currentMatrix.current && onHitTestSelect) {
