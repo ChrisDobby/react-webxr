@@ -7,6 +7,7 @@ type UpdateRenderStateOptions = { baseLayer?: XRWebGLLayer };
 interface Pose {
     transform: { matrix: Float32Array };
 }
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface ReferenceSpace {}
 interface HitTestSource {
     cancel: () => void;
@@ -49,4 +50,5 @@ interface NavigatorXR {
     xr?: XR;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface Navigator extends NavigatorXR {}

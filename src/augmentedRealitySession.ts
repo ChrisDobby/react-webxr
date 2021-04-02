@@ -48,11 +48,9 @@ type XRFameHandler = (frame: Frame, pose: any) => void;
 
 const handleXRFrame = (handlers: XRFameHandler[]) => {
     const onXRFrame = (_: any, frame: Frame) => {
-        const session = frame.session;
+        const { session } = frame;
         const pose = frame.getViewerPose(xrRefSpace as ReferenceSpace);
-        for (const handler of handlers) {
-            handler(frame, pose);
-        }
+        handlers.forEach(handler => handler(frame, pose));
 
         scene.startFrame();
 
@@ -156,7 +154,7 @@ const getInitOptions = (options?: SessionOptions) => {
 };
 
 export const startSession = async (options?: SessionOptions) => {
-    if (!navigator.xr) return;
+    if (!navigator.xr) return null;
     const requestOptions = {
         requiredFeatures: getRequiredFeatures(options),
         optionalFeatures: getOptionalFeatures(options),
@@ -190,7 +188,7 @@ export const enableStats = (enabled: boolean) => {
 };
 
 export const addImage = (imageNode: Gltf2Node, includeShadow?: boolean) => {
-    if (!xrSession) return;
+    if (!xrSession) return null;
     if (includeShadow) {
         const shadow = new DropShadowNode();
         vec3.set(shadow.scale, 0.15, 0.15, 0.15);

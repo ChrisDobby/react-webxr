@@ -1,6 +1,6 @@
 import * as React from "react";
-import AugmentedRealityHitTest from "./AugmentedRealityHitTest";
 import { action } from "@storybook/addon-actions";
+import AugmentedRealityHitTest from "./AugmentedRealityHitTest";
 import { GltfImage } from "../types";
 
 export default {
@@ -30,7 +30,7 @@ export const Default = () => {
         setSelectedImage(ev.target.value as SelectedImage);
 
     const onHitTestSelect = (matrix: Float32Array) => {
-        imageIndexRef.current = imageIndexRef.current + 1;
+        imageIndexRef.current += 1;
         const image = availableImages[selectedImage];
         setImages([
             ...images,
@@ -44,10 +44,8 @@ export const Default = () => {
 
     return (
         <>
-            <label htmlFor="selectImage" style={{ marginRight: "10px" }}>
-                Select image to show:
-            </label>
-            <select value={selectedImage} onBlur={onImageSelected} onChange={onImageSelected}>
+            <span style={{ marginRight: "10px" }}>Select image to show:</span>
+            <select id="select-image" value={selectedImage} onBlur={onImageSelected} onChange={onImageSelected}>
                 {Object.entries(availableImages).map(([value, image]) => (
                     <option key={value} value={value} aria-selected={value === selectedImage}>
                         {image.title}

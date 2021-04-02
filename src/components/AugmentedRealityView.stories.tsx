@@ -28,7 +28,11 @@ export const WithDomOverlay = () => (
 
 export const NoStats = () => <AugmentedRealityView showStats={false} />;
 
-const StoryStartStopButton = (props: any) => <button onClick={props.onStartSelected}>Start AR session</button>;
+const StoryStartStopButton = (props: any) => (
+    <button type="button" onClick={props.onStartSelected}>
+        Start AR session
+    </button>
+);
 export const WithStartStopComponent = () => <AugmentedRealityView startStopComponent={StoryStartStopButton} />;
 
 const ReasonDisplay = (props: any) => {

@@ -25,7 +25,9 @@ type AugmentedRealityHitTestProps = StandardProps &
  */
 const AugmentedRealityHitTest = (props: AugmentedRealityHitTestProps) => {
     const currentMatrix = React.useRef<Float32Array | null>(null);
-    const onHitTest = (matrix: Float32Array | null) => (currentMatrix.current = matrix);
+    const onHitTest = (matrix: Float32Array | null) => {
+        currentMatrix.current = matrix;
+    };
 
     const { showStats = false, showTarget = true, targetImageUrl, onHitTestSelect, ...standardProps } = props;
     const hitTestOptions = { targetImageUrl, showTarget };
