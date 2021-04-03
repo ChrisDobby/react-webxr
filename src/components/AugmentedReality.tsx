@@ -36,7 +36,7 @@ const StartStopButton = ({ onStartSelected }: StartComponentProps) => (
     >
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
             <path d="M608 64H32C14.33 64 0 78.33 0 96v320c0 17.67 14.33 32 32 32h160.22c25.19 0 48.03-14.77 58.36-37.74l27.74-61.64C286.21 331.08 302.35 320 320 320s33.79 11.08 41.68 28.62l27.74 61.64C399.75 433.23 422.6 448 447.78 448H608c17.67 0 32-14.33 32-32V96c0-17.67-14.33-32-32-32zM160 304c-35.35 0-64-28.65-64-64s28.65-64 64-64 64 28.65 64 64-28.65 64-64 64zm320 0c-35.35 0-64-28.65-64-64s28.65-64 64-64 64 28.65 64 64-28.65 64-64 64z" />
-        </svg>{" "}
+        </svg>
         <span style={{ fontWeight: 700 }}>Start AR Session</span>
     </button>
 );
@@ -70,42 +70,43 @@ const AugmentedReality = (props: AugmentedRealityProps) => {
 
     const imagesInView = React.useRef<SceneImage[]>([]);
 
-    const updateImages = (imagesToUpdate?: GltfImage[]) => {
-        const toRemove = imagesInView.current.filter(({ key }) => !imagesToUpdate?.find(image => image.key === key));
-        const toAdd = imagesToUpdate?.filter(({ key }) => !imagesInView.current.find(image => image.key === key));
-
-        toRemove.forEach(image => removeImage(image.node));
-        toAdd?.forEach(image => {
-            const { src, matrix } = image;
-            const newImage = new Gltf2Node({ url: src });
-            const node = addImage(newImage, image.includeShadow);
-            if (!node) return;
-            if (matrix) {
-                node.matrix = matrix;
-            }
-
-            imagesInView.current.push({ node, key: image.key });
-        });
-    };
-
     React.useEffect(() => {
         if (session) {
             enableStats(showStats);
         }
-    }, [showStats, support, session]);
+    }, [showStats, session]);
 
     React.useEffect(() => {
+        const updateImages = (imagesToUpdate?: GltfImage[]) => {
+            const toRemove = imagesInView.current.filter(
+                ({ key }) => !imagesToUpdate?.find(image => image.key === key),
+            );
+            const toAdd = imagesToUpdate?.filter(({ key }) => !imagesInView.current.find(image => image.key === key));
+
+            toRemove.forEach(image => removeImage(image.node));
+            toAdd?.forEach(image => {
+                const { src, matrix } = image;
+                const newImage = new Gltf2Node({ url: src });
+                const node = addImage(newImage, image.includeShadow);
+                if (!node) return;
+                if (matrix) {
+                    node.matrix = matrix;
+                }
+
+                imagesInView.current.push({ node, key: image.key });
+            });
+        };
         if (session) {
             updateImages(images);
         }
-    }, [images, updateImages, session]);
+    }, [images, session]);
 
     React.useEffect(() => {
         if (onSelect) {
             session?.addEventListener("select", onSelect);
         }
         return () => session?.removeEventListener("select", onSelect);
-    });
+    }, [onSelect, session]);
 
     if (!support.isSupported) {
         const Unsupported = unsupportedComponent || UnsupportedMessage;

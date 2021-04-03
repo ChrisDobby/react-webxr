@@ -19,24 +19,25 @@ const useAugmentedReality = () => {
         unsupportedReason: UnsupportedReason.NotInitialised,
     });
 
-    const checkBrowserSupport = async (xr: XR) => {
-        const isSupportedInBrowser = await xr.isSessionSupported(sessionType);
-        setSupport({
-            isSupported: isSupportedInBrowser,
-            unsupportedReason: isSupportedInBrowser ? undefined : UnsupportedReason.NotSupportedInBrowser,
-        });
-    };
-    const onDeviceChange = () => {
-        if (!window.isSecureContext) {
-            setSupport({ isSupported: false, unsupportedReason: UnsupportedReason.InsecureConnection });
-        } else if (!navigator.xr) {
-            setSupport({ isSupported: false, unsupportedReason: UnsupportedReason.NotSupportedInBrowser });
-        } else {
-            checkBrowserSupport(navigator.xr);
-        }
-    };
-
     React.useEffect(() => {
+        const checkBrowserSupport = async (xr: XR) => {
+            const isSupportedInBrowser = await xr.isSessionSupported(sessionType);
+            setSupport({
+                isSupported: isSupportedInBrowser,
+                unsupportedReason: isSupportedInBrowser ? undefined : UnsupportedReason.NotSupportedInBrowser,
+            });
+        };
+
+        const onDeviceChange = () => {
+            if (!window.isSecureContext) {
+                setSupport({ isSupported: false, unsupportedReason: UnsupportedReason.InsecureConnection });
+            } else if (!navigator.xr) {
+                setSupport({ isSupported: false, unsupportedReason: UnsupportedReason.NotSupportedInBrowser });
+            } else {
+                checkBrowserSupport(navigator.xr);
+            }
+        };
+
         onDeviceChange();
     }, []);
 
